@@ -1,24 +1,22 @@
 package sample.controller;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sample.model.Database;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,23 +24,31 @@ import java.util.List;
 public class Controller extends Parent implements DataBaseConnection{
     private Stage stage;
     private Database db;
-    private  Image myImage;
+    private  ImageView myImage;
 
     @FXML
     private Label imageLabel;
+    @FXML
+    private GridPane gridPane;
+    @FXML
+    private Button btnFirst;
 
     public Controller(){
-        //actionInitialization();
-
+        System.out.println("kontruktor");
+        actionInitialization();
     }
     public void actionInitialization(){
-        onStageShowing();
-        onStageClosing();
+        //onStageShowing();
+        //onStageClosing();
+
     }
 
-
+//    public void buttonsGraphicsInit(){
+//        btnFirst.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/next.png"),30,30,true,true)));
+//    }
     public void setStage(Stage stage) {
        this.stage = stage;
+       this.stage.setScene(new Scene(gridPane));
     }
 
     @Override
@@ -62,24 +68,27 @@ public class Controller extends Parent implements DataBaseConnection{
 
     }
 
-    public Image ResizeImage(String imagePath,byte[] pic){
-        Image tempImg = null;
+    public ImageView ResizeImage(String imagePath,byte[] pic){
+        ImageView tempImg = null;
         if(imagePath != null){
-            tempImg = new Image(imagePath);
+            tempImg = new ImageView(imagePath);
         }else{
-            tempImg = new Image(String.valueOf(pic));
+            tempImg = new ImageView(String.valueOf(pic));
         }
-        //ImageView imageView = new ImageView(myImage).s;
-        Image img = tempImg;
-        //Image img2  = img.getSc
-        return  img;
+        tempImg.setFitHeight(imageLabel.getHeight());
+        tempImg.setFitWidth(imageLabel.getWidth());
+        tempImg.setPreserveRatio(true);
+
+        return tempImg;
     }
 
     public void chooseImgButtonListener(){
         System.out.println("Click");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        List<String> extenstionsList = List.of("*.jpg","*.png");
+        List<String> extenstionsList = new ArrayList<>(); //= List.of("*.jpg","*.png");
+        extenstionsList.add("*.jpg");
+        extenstionsList.add("*.png");
 
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image files (jpg,png)",extenstionsList);
 
@@ -88,13 +97,12 @@ public class Controller extends Parent implements DataBaseConnection{
         File result = fileChooser.showOpenDialog(stage);
         System.out.println(result.getAbsolutePath());
         if(result != null){
+          //  myImage = new ImageView(result.toURI().toString());
+            myImage = ResizeImage(result.toURI().toString(),null);
+            Platform.runLater(() -> {
+                imageLabel.setGraphic(myImage);
 
-            System.out.println(result.getAbsolutePath());
-
-
-
-//             myImage = new Image(result.getAbsolutePath());
-//             imageLabel.setGraphic(new ImageView(myImage));
+            });
         }
         else{
             System.out.println("No file Selected");
