@@ -8,6 +8,11 @@ import java.util.logging.Logger;
 public class Database {
 
     private static Database instance = new Database();
+
+    public Connection getConnection() {
+        return connection;
+    }
+
     private Connection connection = null;
     private Database(){};
 
@@ -18,7 +23,7 @@ public class Database {
     public Connection connect(){
         try {
             System.out.println("Łączenie");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/test","root","");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/products._db","root","");
             System.out.println("Połaczono");
             return connection;
         } catch (SQLException e) {

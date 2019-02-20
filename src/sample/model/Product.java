@@ -2,19 +2,20 @@ package sample.model;
 
 import java.time.LocalDate;
 
+
 public class Product {
     private int id;
     private String name;
     private float price;
     private LocalDate date;
-    private byte[] img;
+    private String imgPath;
 
-    public Product(int id, String name, float price, LocalDate date, byte[] img) {
-        this.id = id;
+    public Product(){};
+    public Product(String name, float price, LocalDate date, String imgPath) {
         this.name = name;
         this.price = price;
         this.date = date;
-        this.img = img;
+        this.imgPath = imgPath;
     }
 
     public int getId() {
@@ -33,7 +34,7 @@ public class Product {
         return date;
     }
 
-    public byte[] getImg() {
-        return img;
+    public String getImgPath() {
+        return imgPath;
     }
 }

@@ -1,7 +1,9 @@
 package sample.controller;
 
-public interface DataBaseConnection {
-    void onStageShowing();
+import javafx.stage.Stage;
 
-    void onStageClosing();
+public interface DataBaseConnection {
+    void onStageShowing(Stage stage);
+
+    void onStageClosing(Stage stage);
 }

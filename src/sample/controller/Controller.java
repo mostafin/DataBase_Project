@@ -2,58 +2,39 @@ package sample.controller;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sample.model.Database;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import sample.model.Product;
+import sample.model.ProductDAO;
+
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Controller extends Parent implements DataBaseConnection{
-    private Stage stage;
+
+public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner{
     private Database db;
-    private  ImageView myImage;
-
-    @FXML
-    private Label imageLabel;
-    @FXML
-    private GridPane gridPane;
-    @FXML
-    private Button btnFirst;
+    public static final Logger LOGGER = Logger.getLogger(Controller.class.getName());
+    private ProductDAO  productDAO = new ProductDAO();
 
     public Controller(){
-        System.out.println("kontruktor");
-        actionInitialization();
-    }
-    public void actionInitialization(){
-        //onStageShowing();
-        //onStageClosing();
-
-    }
-
-//    public void buttonsGraphicsInit(){
-//        btnFirst.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/next.png"),30,30,true,true)));
-//    }
-    public void setStage(Stage stage) {
-       this.stage = stage;
-       this.stage.setScene(new Scene(gridPane));
+        System.out.println("konstruktor");
     }
 
     @Override
-    public void onStageShowing() {
-        stage.setOnShown(new EventHandler<WindowEvent>() {
+    public void onStageShowing(Stage stage) {
+        stage.setOnShowing(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 db = Database.getInstance();
@@ -63,27 +44,13 @@ public class Controller extends Parent implements DataBaseConnection{
     }
 
     @Override
-    public void onStageClosing() {
+    public void onStageClosing(Stage stage) {
         stage.setOnCloseRequest(event -> db.disconnect());
 
     }
+    @Override
+    public String chooseImage(Label label, Stage stage) {
 
-    public ImageView ResizeImage(String imagePath,byte[] pic){
-        ImageView tempImg = null;
-        if(imagePath != null){
-            tempImg = new ImageView(imagePath);
-        }else{
-            tempImg = new ImageView(String.valueOf(pic));
-        }
-        tempImg.setFitHeight(imageLabel.getHeight());
-        tempImg.setFitWidth(imageLabel.getWidth());
-        tempImg.setPreserveRatio(true);
-
-        return tempImg;
-    }
-
-    public void chooseImgButtonListener(){
-        System.out.println("Click");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         List<String> extenstionsList = new ArrayList<>(); //= List.of("*.jpg","*.png");
@@ -95,17 +62,53 @@ public class Controller extends Parent implements DataBaseConnection{
         fileChooser.getExtensionFilters().add(filter);
 
         File result = fileChooser.showOpenDialog(stage);
-        System.out.println(result.getAbsolutePath());
+        String imgPath = "";
+        //System.out.println(result.getPath().replace("\\","\\\\"));
         if(result != null){
-          //  myImage = new ImageView(result.toURI().toString());
-            myImage = ResizeImage(result.toURI().toString(),null);
-            Platform.runLater(() -> {
-                imageLabel.setGraphic(myImage);
+            imgPath = result.getPath().replace("\\","\\\\");
+            ImageView myImage = this.ResizeImage(result.toURI().toString(),null,label);
 
+            Platform.runLater(() -> {
+                label.setGraphic(myImage);
             });
+
         }
         else{
             System.out.println("No file Selected");
         }
+        return imgPath;
+    }
+    @Override
+    public ImageView ResizeImage(String imagePath, byte[] pic, Label label) {
+        ImageView tempImg = null;
+        if(imagePath != null){
+            tempImg = new ImageView(imagePath);
+        }else{
+            tempImg = new ImageView(String.valueOf(pic));
+        }
+        tempImg.setFitHeight(label.getHeight());
+        tempImg.setFitWidth(label.getWidth());
+        tempImg.setPreserveRatio(true);
+
+        return tempImg;
+    }
+
+    @Override
+    public void Insert(String name, String price, LocalDate date, String imgPath) throws InputException {
+        if(name == null
+                || price == null
+                || date == null
+                || imgPath == null)
+                throw new InputException("Prosze wypełnic wszystkie pola!");
+        else{
+            try {
+                productDAO.add(new Product(name,Float.parseFloat(price),date,imgPath));
+            } catch (SQLException e) {
+                LOGGER.log(Level.INFO,e.getClass() + e.getMessage());
+            } catch (FileNotFoundException e) {
+                LOGGER.log(Level.INFO,e.getClass() + e.getMessage());
+            }
+        }
+
     }
 }

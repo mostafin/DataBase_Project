@@ -1,13 +1,12 @@
 package sample.view;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import sample.controller.Controller;
+
 
 import java.io.IOException;
 
@@ -22,9 +21,9 @@ public class Main extends Application {
         this.primaryStage.setResizable(false);
 
         //initializeControllerSettings();
-        initializeViewControllerSettings();
+       initializeViewControllerSettings();
     }
-    public void initializeControllerSettings(){
+//    public void initializeControllerSettings(){
 //        try {
 //            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sample.fxml"));
 //
@@ -43,7 +42,7 @@ public class Main extends Application {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
     public void initializeViewControllerSettings(){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sample.fxml"));
@@ -51,14 +50,22 @@ public class Main extends Application {
             GridPane gridPane = fxmlLoader.load();
 
             //Setting scene
-            Scene scene = new Scene(gridPane);
-            primaryStage.setScene(scene);
+           // Scene scene = new Scene(gridPane);
+           // primaryStage.setScene(scene);
+
+            /// Creating controller
+            Controller controller = new Controller();
 
             // Giving controller access to main application
-            View view = (fxmlLoader.getController();
+            View view = fxmlLoader.getController();
+            view.setController(controller);
             view.setStage(this.primaryStage);
-            primaryStage.show();
+            view.setImageChoosingListener(controller);
+            view.setDataBaseConnection(controller);
+            view.setInsertListner(controller);
 
+            view.setInit();
+            primaryStage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
