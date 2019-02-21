@@ -56,6 +56,11 @@ public class View extends Parent {
     private DataBaseConnection dataBaseConnection;
     private InsertListner insertListner;
     private UpdateListner updateListner;
+    private DeleteListener deleteListener;
+
+    void setDeleteListener(DeleteListener deleteListener) {
+        this.deleteListener = deleteListener;
+    }
 
     void setUpdateListner(UpdateListner updateListner) {
         this.updateListner = updateListner;
@@ -122,7 +127,7 @@ public class View extends Parent {
     }
     public void onInsertListener(ActionEvent actionEvent) {
         try {
-            insertListner.Insert(nameField.getText(),priceField.getText(),dateField.getValue(),this.imgPath);
+            insertListner.Insert(nameField.getText(),priceField.getText(),dateField.getValue().toString(),this.imgPath);
            // JOptionPane.showMessageDialog(null,"Data inserted");
             Alert alert = AlertFactory.createAlert(AlertFactory.INFORMATION,"Data inserted successfully");
             alert.showAndWait();
@@ -135,7 +140,7 @@ public class View extends Parent {
 
     public void onUpdateListener(ActionEvent actionEvent) {
         try {
-            updateListner.Update(idField.getText(), nameField.getText(), priceField.getText(), dateField.getValue(), this.imgPath);
+            updateListner.update(idField.getText(), nameField.getText(), priceField.getText(), dateField.getValue().toString(), this.imgPath);
             //JOptionPane.showMessageDialog(null,"Data updated");
             Alert alert = AlertFactory.createAlert(AlertFactory.INFORMATION, "Data updated successfully");
             alert.showAndWait();
@@ -146,6 +151,20 @@ public class View extends Parent {
 
         } catch (InputException e) {
             // JOptionPane.showMessageDialog(null,e.getMessage());
+            Alert alert = AlertFactory.createAlert(AlertFactory.WARNING, e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    public void onDeleteListener(ActionEvent actionEvent) {
+        try {
+            deleteListener.delete(idField.getText());
+            Alert alert = AlertFactory.createAlert(AlertFactory.INFORMATION, "Data at ID ="+idField.getText() +" deleted successfully");
+            alert.showAndWait();
+        } catch (IdNotFoundException e) {
+            Alert alert = AlertFactory.createAlert(AlertFactory.ERROR, e.getMessage());
+            alert.showAndWait();
+        } catch (InputException e) {
             Alert alert = AlertFactory.createAlert(AlertFactory.WARNING, e.getMessage());
             alert.showAndWait();
         }

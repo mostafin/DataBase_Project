@@ -68,7 +68,7 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="btnDelete" layoutX="199.0" layoutY="333.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="95.0" text="Delete">
+            <Button fx:id="btnDelete" onAction="#onDeleteListener" layoutX="199.0" layoutY="333.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="95.0" text="Delete">
                <font>
                   <Font size="15.0" />
                </font>

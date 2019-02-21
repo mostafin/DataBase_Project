@@ -15,7 +15,6 @@ import sample.model.ProductDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner,UpdateListner{
+public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner,UpdateListner,DeleteListener{
     private Database db;
     private static final Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private ProductDAO  productDAO = new ProductDAO();
@@ -92,7 +91,7 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
     }
 
     @Override
-    public void Insert(String name, String price, LocalDate date, String imgPath) throws InputException {
+    public void Insert(String name, String price, String date, String imgPath) throws InputException {
         if(insertValidate(name,price,date,imgPath))
         {
             try {
@@ -106,7 +105,7 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
     }
 
     @Override
-    public boolean insertValidate(String name, String price, LocalDate date, String imgPath) throws InputException {
+    public boolean insertValidate(String name, String price, String date, String imgPath) throws InputException {
         if(name == null
                 || price == null
                 || date == null
@@ -117,18 +116,18 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
     }
 
     @Override
-    public void Update(String id, String name, String price, LocalDate date, String imgPath) throws InputException,IdNotFoundException {
-        System.out.println(imgPath);
+    public void update(String id, String name, String price, String date, String imgPath) throws InputException,IdNotFoundException {
+        //System.out.println(imgPath);
         int updateResult = -1;
         try {
             if (imgPath.equals("")) {
-                if (UpdateValidate(id, name, price, date, imgPath))
+                if (updateValidate(id, name, price, date, imgPath))
                     updateResult = productDAO.updateWithoutImg(new Product(Integer.parseInt(id), name, Float.parseFloat(price), date));
             } else {
-                if (UpdateValidate(id, name, price, date, imgPath))
+                if (updateValidate(id, name, price, date, imgPath))
                     updateResult = productDAO.updateWithImg(new Product(Integer.parseInt(id), name, Float.parseFloat(price), date, imgPath));
             }
-            if(updateResult != 1){
+            if(updateResult == 0){
                 throw new IdNotFoundException("Updated did not succed. Wrong data's ID!");
             }
         }
@@ -140,7 +139,7 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
     }
 
     @Override
-    public boolean UpdateValidate(String id, String name, String price, LocalDate date, String imgPath) throws InputException {
+    public boolean updateValidate(String id, String name, String price, String date, String imgPath) throws InputException {
         if(     id == null
                 || name == null
                 || price == null
@@ -148,6 +147,28 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
                 || imgPath == null) {
             throw new InputException("Prosze wypełnic wymagane pola! id,name,price,date");
         }
+        return true;
+    }
+
+    @Override
+    public int delete(String id) throws IdNotFoundException, InputException {
+        int deleteResult;
+        if(deleteValidate(id)) {
+            try {
+                 deleteResult = productDAO.delete(Integer.parseInt(id));
+                 if(deleteResult == 0)
+                     throw new IdNotFoundException("Delete did not succeed. Wrong data's ID");
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE,e.getClass() + e.getMessage());
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean deleteValidate(String id) throws InputException {
+        if(id.equals(""))
+            throw new InputException("No ID given");
         return true;
     }
 }

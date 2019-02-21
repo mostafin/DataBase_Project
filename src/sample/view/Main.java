@@ -64,6 +64,7 @@ public class Main extends Application {
             view.setDataBaseConnection(controller);
             view.setInsertListner(controller);
             view.setUpdateListner(controller);
+            view.setDeleteListener(controller);
             view.setInit();
             primaryStage.show();
 

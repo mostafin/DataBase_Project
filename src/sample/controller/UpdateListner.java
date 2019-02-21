@@ -1,10 +1,8 @@
 package sample.controller;
 
-import java.time.LocalDate;
-
 public interface UpdateListner {
 
-    void Update(String id, String name, String price, LocalDate date, String imgPath) throws InputException, IdNotFoundException;
+    void update(String id, String name, String price, String date, String imgPath) throws InputException, IdNotFoundException;
 
-    boolean UpdateValidate(String id , String name , String price, LocalDate date, String imgPath) throws InputException;
+    boolean updateValidate(String id , String name , String price, String date, String imgPath) throws InputException;
 }
