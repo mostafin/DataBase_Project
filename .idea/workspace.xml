@@ -2,27 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a0fbc92e-e31a-47b1-8d75-82be29933758" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Images/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/Images/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/controller/Controller$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/controller/Controller$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/controller/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/controller/Controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/controller/DataBaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/controller/DataBaseConnection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/model/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/model/Database.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/model/Product.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/model/Product.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/model/ProductDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/model/ProductDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/view/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/view/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/view/View.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/view/View.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DataBase_Project/sample/view/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DataBase_Project/sample/view/sample.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/controller/DataBaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/controller/DataBaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/model/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/model/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/model/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/model/ProductDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/model/ProductDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/view/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/view/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/view/View.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/view/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/view/sample.fxml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -211,7 +191,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550683028095" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550683141175" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -257,11 +237,18 @@
       <option name="presentableId" value="Default" />
       <updated>1550504419381</updated>
     </task>
+    <task id="LOCAL-00001" summary="Insert Added">
+      <created>1550683070790</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1550683070790</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28518122" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -272,14 +259,14 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32872504" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.24818276" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.24818276" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053304" side_tool="true" weight="0.24818276" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="9" visible="true" weight="0.32917964" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.3281412" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -318,6 +305,10 @@
       <window_info anchor="right" id="Capture Analysis" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout-to-restore>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Insert Added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Insert Added" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Resources/Images/next.png">
