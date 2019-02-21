@@ -4,10 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -58,16 +55,21 @@ public class View extends Parent {
     private ImageChoosingListener imageChoosingListener;
     private DataBaseConnection dataBaseConnection;
     private InsertListner insertListner;
+    private UpdateListner updateListner;
 
-    public void setInsertListner(InsertListner insertListner) {
+    void setUpdateListner(UpdateListner updateListner) {
+        this.updateListner = updateListner;
+    }
+
+    void setInsertListner(InsertListner insertListner) {
         this.insertListner = insertListner;
     }
 
-    public void setDataBaseConnection(DataBaseConnection dataBaseConnection) {
+    void setDataBaseConnection(DataBaseConnection dataBaseConnection) {
         this.dataBaseConnection = dataBaseConnection;
     }
 
-    public void setImageChoosingListener(ImageChoosingListener imageChoosingListener) {
+    void setImageChoosingListener(ImageChoosingListener imageChoosingListener) {
         this.imageChoosingListener = imageChoosingListener;
     }
 
@@ -79,16 +81,16 @@ public class View extends Parent {
         this.controller = controller;
     }
 
-    public void setStage(Stage stage) {
+    void setStage(Stage stage) {
         this.stage = stage;
         this.stage.setScene(new Scene(this.gridPane));
     }
 
-    public void closeOpenConnectionInit(){
+    private void closeOpenConnectionInit(){
         dataBaseConnection.onStageShowing(this.stage);
         dataBaseConnection.onStageClosing(this.stage);
     }
-    public void setInit() {
+    void setInit() {
         buttonsGraphicsInit();
         closeOpenConnectionInit();
 
@@ -100,8 +102,8 @@ public class View extends Parent {
     }
 
 
-    public void buttonsGraphicsInit() {
-        btnInsert.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/insert.png"), 30, 30, true, true)));
+    private void buttonsGraphicsInit() {
+        btnInsert.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/insert.png"), 25, 25, true, true)));
         btnUpdate.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/update.png"), 30, 30, true, true)));
         btnDelete.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/delete.png"), 30, 30, true, true)));
 
@@ -118,13 +120,34 @@ public class View extends Parent {
         btnLast.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Images/last.png"), 30, 30, true, true)));
 
     }
-
     public void onInsertListener(ActionEvent actionEvent) {
         try {
             insertListner.Insert(nameField.getText(),priceField.getText(),dateField.getValue(),this.imgPath);
-            JOptionPane.showMessageDialog(null,"Data inserted");
+           // JOptionPane.showMessageDialog(null,"Data inserted");
+            Alert alert = AlertFactory.createAlert(AlertFactory.INFORMATION,"Data inserted successfully");
+            alert.showAndWait();
         } catch (InputException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
+           // JOptionPane.showMessageDialog(null,e.getMessage());
+            Alert alert = AlertFactory.createAlert(AlertFactory.WARNING,e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    public void onUpdateListener(ActionEvent actionEvent) {
+        try {
+            updateListner.Update(idField.getText(), nameField.getText(), priceField.getText(), dateField.getValue(), this.imgPath);
+            //JOptionPane.showMessageDialog(null,"Data updated");
+            Alert alert = AlertFactory.createAlert(AlertFactory.INFORMATION, "Data updated successfully");
+            alert.showAndWait();
+
+        } catch (IdNotFoundException e) {
+            Alert alert = AlertFactory.createAlert(AlertFactory.ERROR, e.getMessage());
+            alert.showAndWait();
+
+        } catch (InputException e) {
+            // JOptionPane.showMessageDialog(null,e.getMessage());
+            Alert alert = AlertFactory.createAlert(AlertFactory.WARNING, e.getMessage());
+            alert.showAndWait();
         }
     }
 }

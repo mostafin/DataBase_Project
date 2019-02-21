@@ -23,9 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner{
+public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner,UpdateListner{
     private Database db;
-    public static final Logger LOGGER = Logger.getLogger(Controller.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private ProductDAO  productDAO = new ProductDAO();
 
     public Controller(){
@@ -68,9 +68,7 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
             imgPath = result.getPath().replace("\\","\\\\");
             ImageView myImage = this.ResizeImage(result.toURI().toString(),null,label);
 
-            Platform.runLater(() -> {
-                label.setGraphic(myImage);
-            });
+            Platform.runLater(() -> label.setGraphic(myImage));
 
         }
         else{
@@ -80,11 +78,11 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
     }
     @Override
     public ImageView ResizeImage(String imagePath, byte[] pic, Label label) {
-        ImageView tempImg = null;
+        ImageView tempImg;
         if(imagePath != null){
             tempImg = new ImageView(imagePath);
         }else{
-            tempImg = new ImageView(String.valueOf(pic));
+            tempImg = new ImageView(pic.toString());
         }
         tempImg.setFitHeight(label.getHeight());
         tempImg.setFitWidth(label.getWidth());
@@ -95,20 +93,61 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
 
     @Override
     public void Insert(String name, String price, LocalDate date, String imgPath) throws InputException {
-        if(name == null
-                || price == null
-                || date == null
-                || imgPath == null)
-                throw new InputException("Prosze wypełnic wszystkie pola!");
-        else{
+        if(insertValidate(name,price,date,imgPath))
+        {
             try {
                 productDAO.add(new Product(name,Float.parseFloat(price),date,imgPath));
             } catch (SQLException e) {
-                LOGGER.log(Level.INFO,e.getClass() + e.getMessage());
+                LOGGER.log(Level.SEVERE,e.getClass() + e.getMessage());
             } catch (FileNotFoundException e) {
                 LOGGER.log(Level.INFO,e.getClass() + e.getMessage());
             }
         }
+    }
 
+    @Override
+    public boolean insertValidate(String name, String price, LocalDate date, String imgPath) throws InputException {
+        if(name == null
+                || price == null
+                || date == null
+                || imgPath == null) {
+            throw new InputException("Prosze wypełnic wymagane pola!");
+        }
+        return true;
+    }
+
+    @Override
+    public void Update(String id, String name, String price, LocalDate date, String imgPath) throws InputException,IdNotFoundException {
+        System.out.println(imgPath);
+        int updateResult = -1;
+        try {
+            if (imgPath.equals("")) {
+                if (UpdateValidate(id, name, price, date, imgPath))
+                    updateResult = productDAO.updateWithoutImg(new Product(Integer.parseInt(id), name, Float.parseFloat(price), date));
+            } else {
+                if (UpdateValidate(id, name, price, date, imgPath))
+                    updateResult = productDAO.updateWithImg(new Product(Integer.parseInt(id), name, Float.parseFloat(price), date, imgPath));
+            }
+            if(updateResult != 1){
+                throw new IdNotFoundException("Updated did not succed. Wrong data's ID!");
+            }
+        }
+        catch (SQLException e){
+            LOGGER.log(Level.SEVERE, e.getClass() + e.getMessage());
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, e.getClass() + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean UpdateValidate(String id, String name, String price, LocalDate date, String imgPath) throws InputException {
+        if(     id == null
+                || name == null
+                || price == null
+                || date == null
+                || imgPath == null) {
+            throw new InputException("Prosze wypełnic wymagane pola! id,name,price,date");
+        }
+        return true;
     }
 }

@@ -12,10 +12,10 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public Stage primaryStage;
+    private Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Database");
         this.primaryStage.setResizable(false);
@@ -43,7 +43,7 @@ public class Main extends Application {
 //            e.printStackTrace();
 //        }
 //    }
-    public void initializeViewControllerSettings(){
+    private void initializeViewControllerSettings(){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sample.fxml"));
 
@@ -63,7 +63,7 @@ public class Main extends Application {
             view.setImageChoosingListener(controller);
             view.setDataBaseConnection(controller);
             view.setInsertListner(controller);
-
+            view.setUpdateListner(controller);
             view.setInit();
             primaryStage.show();
 

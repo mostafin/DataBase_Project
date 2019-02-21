@@ -1,53 +1,91 @@
 package sample.model;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
-/*
- * One DAO class person table
- * CRUD.
- */
-public class ProductDAO {
+        /*
+         * One DAO class person table
+         * CRUD.
+         */
+        public class ProductDAO {
 
-    public void add(Product product) throws SQLException, FileNotFoundException {
-        Connection conn = Database.getInstance().getConnection();
-        PreparedStatement p = conn.prepareStatement("INSERT INTO products(name,price,add_date,image)"
-                + "values(?,?,?,?)");
+            public void add(Product product) throws SQLException, FileNotFoundException {
+                Connection conn = Database.getInstance().getConnection();
+                PreparedStatement p = conn.prepareStatement("INSERT INTO products(name,price,add_date,image)"
+                        + "values(?,?,?,?)");
 
-        p.setString(1,product.getName());
-        p.setFloat(2,product.getPrice());
+                p.setString(1, product.getName());
+                p.setFloat(2, product.getPrice());
 
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        //p.setString(3, dateFormat.format(product.getDate()));
-        p.setString(3,product.getDate().toString());
+                //p.setString(3, dateFormat.format(product.getDate()));
+                p.setString(3, product.getDate().toString());
 
-        //System.out.println(product.getImgPath());
+                //System.out.println(product.getImgPath());
 
-        InputStream img = new FileInputStream(new File(product.getImgPath()));
-        p.setBlob(4,img);
-        p.execute();
+                InputStream img = new FileInputStream(new File(product.getImgPath()));
+                p.setBlob(4, img);
+                p.execute();
+                p.close();
 
-    };
-    public Product get(int id){
-        return null;
-    }
-    public List<Product> getProducts(){
-        return  null;
-    }
+            }
 
-    public void update(Product product){
+            public Product get(int id) {
+                return null;
+            }
 
-    }
+            public List<Product> getProducts() {
+                return null;
+            }
 
-    public void delete(int id){}
+            public int updateWithImg(Product product) throws SQLException, FileNotFoundException {
 
-}
+                Connection conn = Database.getInstance().getConnection();
+                PreparedStatement p = conn.prepareStatement("UPDATE products SET name = ?, price = ?"
+                        + ", add_date = ?,image = ? WHERE id = ?");
+
+                p.setString(1, product.getName());
+                p.setFloat(2, product.getPrice());
+
+                //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                p.setString(3, product.getDate().toString());
+
+                InputStream img = new FileInputStream(new File(product.getImgPath()));
+
+                p.setBlob(4, img);
+                p.setInt(5, product.getId());
+                int result = p.executeUpdate();
+                p.close();
+                return result;
+            }
+
+            public int updateWithoutImg(Product product) throws SQLException {
+                Connection conn = Database.getInstance().getConnection();
+                PreparedStatement p = conn.prepareStatement("UPDATE products SET name = ?, price = ?"
+                        + ", add_date = ? WHERE id = ?");
+
+                p.setString(1, product.getName());
+                p.setFloat(2, product.getPrice());
+
+                //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                p.setString(3, product.getDate().toString());
+
+                p.setInt(4, product.getId());
+                int result = p.executeUpdate();
+                p.close();
+                return  result;
+            }
+
+            public void delete(int id) {
+            }
+        }
