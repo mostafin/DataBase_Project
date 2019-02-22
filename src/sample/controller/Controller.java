@@ -3,6 +3,7 @@ package sample.controller;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.stage.FileChooser;
@@ -11,33 +12,43 @@ import javafx.stage.WindowEvent;
 import sample.model.Database;
 import sample.model.Product;
 import sample.model.ProductDAO;
+import sample.view.View;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner,UpdateListner,DeleteListener{
+public class Controller  implements DataBaseConnection,ImageChoosingListener,InsertListner,UpdateListner,DeleteListener
+        ,FetchDataListener,SelectListener,MoveListener{
     private Database db;
     private static final Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private ProductDAO  productDAO = new ProductDAO();
+    private View view;
 
-    public Controller(){
-        System.out.println("konstruktor");
+    public Controller(View view){
+        this.view = view;
     }
 
     @Override
-    public void onStageShowing(Stage stage) {
+    public void onStageShowing(Stage stage, ReentrantLock lock) {
         stage.setOnShowing(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
+             //   System.out.println("LOCK : " + lock.isLocked());
                 db = Database.getInstance();
                 db.connect();
+                lock.unlock();
+             //   System.out.println("LOCK : " + lock.isLocked());
             }
         });
     }
@@ -81,7 +92,7 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
         if(imagePath != null){
             tempImg = new ImageView(imagePath);
         }else{
-            tempImg = new ImageView(pic.toString());
+            tempImg = new ImageView(new Image(new ByteArrayInputStream(pic)));
         }
         tempImg.setFitHeight(label.getHeight());
         tempImg.setFitWidth(label.getWidth());
@@ -117,7 +128,6 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
 
     @Override
     public void update(String id, String name, String price, String date, String imgPath) throws InputException,IdNotFoundException {
-        //System.out.println(imgPath);
         int updateResult = -1;
         try {
             if (imgPath.equals("")) {
@@ -133,7 +143,7 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
         }
         catch (SQLException e){
             LOGGER.log(Level.SEVERE, e.getClass() + e.getMessage());
-        } catch (FileNotFoundException e) {
+        }catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, e.getClass() + e.getMessage());
         }
     }
@@ -170,5 +180,48 @@ public class Controller  implements DataBaseConnection,ImageChoosingListener,Ins
         if(id.equals(""))
             throw new InputException("No ID given");
         return true;
+    }
+
+    @Override
+    public List fetchData() {
+        List<Product> list = null;
+        try {
+            list = productDAO.getProducts();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE,e.getClass() + e.getMessage());
+        }
+        return list;
+    }
+
+    @Override
+    public void select() {
+        Product product = view.productsTable.getSelectionModel().getSelectedItem();
+        Platform.runLater(() ->{
+            view.idField.setText(String.valueOf(product.getId()));
+            view.nameField.setText(product.getName());
+            view.priceField.setText(String.valueOf(product.getPrice()));
+            view.dateField.setValue(LocalDate.parse(product.getDate()));
+            view.imageLabel.setGraphic(ResizeImage(null,Base64.getDecoder().decode(product.getImgPath()), view.imageLabel));
+        });
+    }
+
+    @Override
+    public void move(Object actionInvoker) {
+        int actualPosition = view.productsTable.getFocusModel().getFocusedIndex();
+        switch (actionInvoker.toString()){
+            case "btnFirst":
+                view.productsTable.getSelectionModel().select(0);
+                break;
+            case "btnNext":
+                view.productsTable.getSelectionModel().select(++actualPosition);
+                break;
+            case "btnPrev":
+                view.productsTable.getSelectionModel().select(--actualPosition);
+                break;
+            case "btnLast":
+                view.productsTable.getSelectionModel().select(view.productsTable.getItems().size()-1);
+                break;
+        }
+        //System.out.println(view.productsTable.getFocusModel().getFocusedIndex());
     }
 }

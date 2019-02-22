@@ -9,18 +9,18 @@ public class Database {
 
     private static Database instance = new Database();
 
-    public Connection getConnection() {
+    Connection getConnection() {
         return connection;
     }
 
     private Connection connection = null;
-    private Database(){};
+    private Database(){}
 
     public static Database getInstance() {
         return instance;
     }
 
-    public Connection connect(){
+    public  Connection connect(){
         try {
             System.out.println("Łączenie");
             connection = DriverManager.getConnection("jdbc:mysql://localhost/products._db","root","");

@@ -5,11 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
         /*
@@ -18,7 +16,7 @@ import java.util.List;
          */
         public class ProductDAO {
 
-            public void add(Product product) throws SQLException, FileNotFoundException {
+                public void add(Product product) throws SQLException, FileNotFoundException {
                 Connection conn = Database.getInstance().getConnection();
                 PreparedStatement p = conn.prepareStatement("INSERT INTO products(name,price,add_date,image)"
                         + "values(?,?,?,?)");
@@ -31,7 +29,7 @@ import java.util.List;
                 //p.setString(3, dateFormat.format(product.getDate()));
                 p.setString(3, product.getDate());
 
-                //System.out.println(product.getImgPath());
+                System.out.println(product.getImgPath());
 
                 InputStream img = new FileInputStream(new File(product.getImgPath()));
                 p.setBlob(4, img);
@@ -47,13 +45,19 @@ import java.util.List;
             public List<Product> getProducts() throws SQLException {
                 ArrayList<Product> productArrayList = new ArrayList<>();
                 Connection conn = Database.getInstance().getConnection();
-                PreparedStatement p = conn.prepareStatement("SELECT * FROM products");
+                String query = "SELECT * FROM products";
+                Statement statement;
+                if(conn != null) {
+                     statement = conn.createStatement();
+                }else{
+                    throw new SQLException("conn is null");
+                }
 
-                ResultSet resultSet = p.executeQuery();
-
+                ResultSet resultSet = statement.executeQuery(query);
                 while(resultSet.next()){
                     productArrayList.add(new Product(resultSet.getInt("id"),resultSet.getString("name")
-                           ,resultSet.getFloat("price"),resultSet.getString("add_date"),resultSet.getBytes("image").toString()));
+                           ,resultSet.getFloat("price"),resultSet.getString("add_date")
+                            , Base64.getEncoder().encodeToString(resultSet.getBytes("image"))));
                 }
                 return productArrayList;
             }

@@ -53,18 +53,22 @@ public class Main extends Application {
            // Scene scene = new Scene(gridPane);
            // primaryStage.setScene(scene);
 
-            /// Creating controller
-            Controller controller = new Controller();
-
             // Giving controller access to main application
             View view = fxmlLoader.getController();
-            view.setController(controller);
+            /// Creating controller
+            Controller controller = new Controller(view);
+
+            // Giving controller access to main application
+
             view.setStage(this.primaryStage);
             view.setImageChoosingListener(controller);
             view.setDataBaseConnection(controller);
             view.setInsertListner(controller);
             view.setUpdateListner(controller);
             view.setDeleteListener(controller);
+            view.setFetchDataListener(controller);
+            view.setSelectListener(controller);
+            view.setMoveListener(controller);
             view.setInit();
             primaryStage.show();
 
